@@ -1,9 +1,12 @@
+import os
+from dotenv import load_dotenv
 import requests
 import unicodedata
 import json
 from datetime import datetime
 from pathlib import Path
-APIkey = '8a65fbf5e5b34f3cafc180341261104'
+load_dotenv()
+APIkey = os.getenv('WEATHER_API_KEY')
 plik = Path(__file__).parent / 'weather_history.json'
 
 def load_data():
