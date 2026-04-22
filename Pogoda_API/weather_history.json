@@ -5,5 +5,19 @@
         "temp": 5.9,
         "windspeed": 12.2,
         "date": "2026-04-21 21:28:06"
+    },
+    {
+        "name": "Medebay (3)",
+        "country": "Ethiopia",
+        "temp": 19.0,
+        "windspeed": 13.7,
+        "date": "2026-04-22 19:36:36"
+    },
+    {
+        "name": "Komorow",
+        "country": "Poland",
+        "temp": 10.1,
+        "windspeed": 22.7,
+        "date": "2026-04-22 21:05:13"
     }
 ]

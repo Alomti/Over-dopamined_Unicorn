@@ -2,7 +2,9 @@ import json
 from pathlib import Path
 plik = Path(__file__).parent / 'weather_history.json'
 if not plik.exists():
-    plik.touch()
+    with open(plik, 'w', encoding='utf-8') as f:
+        json.dump([], f, ensure_ascii=False, indent=4)
+              
 
 class WeatherHistory:
     def __init__(self, name, country, temp, windspeed, date):
@@ -39,7 +41,3 @@ def save_data(data):
     formated_data = [d.to_dict() for d in data]
     with open(plik, 'w', encoding='utf-8') as f:
         json.dump(formated_data, f, ensure_ascii=False, indent=4)
-        
-
-history = load_data()
-print(history)
