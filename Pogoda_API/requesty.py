@@ -25,7 +25,7 @@ while True:
         print(weather_manager)
     elif choice == 3:
             sort = input('How to sotr your history? 1-By last three days, Anything but 1-By city')
-            if int(sort) == 1:
+            if sort == '1':
                  weather_manager.sort_by_lastthreedays()
                  print(weather_manager)
             else:
