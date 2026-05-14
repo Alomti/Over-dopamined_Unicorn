@@ -4,8 +4,12 @@ from pathlib import Path
 from raport_for_names import NRaport
 from raport_for_suffixes import SRaport
 from scaner import get_data
-def callback(choice):
+def callback(choice, info_label):
     try:
+        if not choice:
+            logger.error('No folder has been chosen.')
+            info_label.config(text='No folder has been chosen.')
+            return False, False
         input_folder = choice
         logger.info(f'Selected {input_folder}')
         if not input_folder:
