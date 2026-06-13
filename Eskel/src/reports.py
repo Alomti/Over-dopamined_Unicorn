@@ -14,7 +14,7 @@ class Raports():
             for p in c['products']:
                 products.append(p['quantity'])
         products = sum(products)
-        return products, carts, users
+        return [{'Liczba produktów:': products}, {'Liczba koszyków:': carts}, {'Liczba użytkowników:': users}]
     
     def raport2(self):
         products = []
@@ -49,9 +49,21 @@ class Raports():
                 product = self.api.get_product(p['productId'])
                 c_price += product['price']
             carts.append(c_price)
-        Avg_cart = sum(carts) / len(carts)
-        print(Avg_cart)
+        Avg_cart = round(sum(carts) / len(carts), 2)
+        return {'Avg cart value:': Avg_cart}
+    
+    def raport5(self):
+        users = {}
+        for c in self.api.getall_carts():
+            users[c['userId']] = users.get(c['userId'], 0) + 1
+        top3 = sorted(users.items(), key=lambda x: x[1], reverse=True)[:3]
+        top3 = [{'userId': x, 'no_of_carts': y} for x, y in top3]
+        return top3
 
-
-raport = Raports()
-raport.raport4()
+if __name__ == '__main__':
+    raports = Raports()
+    print('1',raports.raport1())
+    print('2',raports.raport2())
+    print('3',raports.raport3())
+    print('4',raports.raport4())
+    print('5',raports.raport5())
