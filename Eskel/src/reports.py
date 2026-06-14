@@ -4,9 +4,7 @@ class Raports():
         self.api = Apiget()
 
     def raport1(self):
-        users = 0
-        for u in self.api.getall_users():
-            users += 1
+        users = len(self.api.getall_users())
         carts = 0
         products = []
         for c in self.api.getall_carts():
@@ -50,7 +48,7 @@ class Raports():
                 c_price += product['price']
             carts.append(c_price)
         Avg_cart = round(sum(carts) / len(carts), 2)
-        return {'Avg cart value:': Avg_cart}
+        return [{'Avg cart value:': Avg_cart}]
     
     def raport5(self):
         users = {}

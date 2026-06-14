@@ -11,10 +11,11 @@ Mens Cotton Jacket,6
 Raport,3
 Cart_Id,Cart_Price
 2,827.25
-6,223
+6,223.0
 1,188.24
 Raport,4
-Avg cart value:,221.89
+Avg cart value:
+221.89
 Raport,5
 userId,no_of_carts
 1,2
