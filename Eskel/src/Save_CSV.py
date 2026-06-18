@@ -25,22 +25,18 @@ def saveCSV():
 
     report2 = Path(__file__).parent.parent / 'data' / 'report2.csv'
     report2.parent.mkdir(parents=True, exist_ok=True)
-    with open(report2, 'w', encoding='utf-8') as f:
-        pd.DataFrame(reports.raport2()).to_csv(f, index=False, encoding='utf-8')
+    reports.raport2().to_csv(report2, index=False, encoding='utf-8')
 
     report3 = Path(__file__).parent.parent / 'data' / 'report3.csv'
     report3.parent.mkdir(parents=True, exist_ok=True)
-    with open(report3, 'w', encoding='utf-8') as f:
-        pd.DataFrame(reports.raport3()).to_csv(f, index=False, encoding='utf-8')
+    pd.DataFrame(reports.raport3()).to_csv(report3, index=False, encoding='utf-8')
 
     report4 = Path(__file__).parent.parent / 'data' / 'report4.csv'
     report4.parent.mkdir(parents=True, exist_ok=True)
-    with open(report4, 'w', encoding='utf-8') as f:
-        pd.DataFrame(reports.raport4()).to_csv(f, index=False, encoding='utf-8')
+    pd.DataFrame(reports.raport4()).to_csv(report4, index=False, encoding='utf-8')
 
     report5 = Path(__file__).parent.parent / 'data' / 'report5.csv'
     report5.parent.mkdir(parents=True, exist_ok=True)
-    with open(report5, 'w', encoding='utf-8') as f:
-        pd.DataFrame(reports.raport5()).to_csv(f, index=False, encoding='utf-8')
+    reports.raport5().to_csv(report5, index=False, encoding='utf-8')
 
 saveCSV()

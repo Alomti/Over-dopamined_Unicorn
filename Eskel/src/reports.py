@@ -1,4 +1,5 @@
 from api import Apiget
+import pandas as pd
 class Raports():
     def __init__(self):
         self.api = Apiget()
@@ -15,16 +16,13 @@ class Raports():
         return [{'Liczba produktów:': products}, {'Liczba koszyków:': carts}, {'Liczba użytkowników:': users}]
     
     def raport2(self):
-        products = []
-        for c in self.api.getall_carts():
-            for p in c['products']:
-                products.append(p)
-        products = sorted(products, key=lambda x: x['quantity'], reverse=True)[:3]
-
-        for p in products:
-            p_n = self.api.get_product(p['productId'])
-            p['productId'] = p_n['title']
-        return products
+        carts = pd.DataFrame(self.api.getall_carts())
+        topproducts = carts.explode('products')
+        top3 = pd.json_normalize(topproducts['products']).sort_values('quantity', ascending=False).head(3)
+        products = pd.DataFrame(self.api.getall_products())
+        names = products[['id','title']]
+        raport = pd.merge(top3, names, how='left', left_on='productId', right_on='id').drop(columns=['productId', 'id'])
+        return raport
     
     def raport3(self):
         carts = []
@@ -51,17 +49,15 @@ class Raports():
         return [{'Avg cart value:': Avg_cart}]
     
     def raport5(self):
-        users = {}
-        for c in self.api.getall_carts():
-            users[c['userId']] = users.get(c['userId'], 0) + 1
-        top3 = sorted(users.items(), key=lambda x: x[1], reverse=True)[:3]
-        top3 = [{'userId': x, 'no_of_carts': y} for x, y in top3]
+        df = pd.DataFrame(self.api.getall_carts())
+        top3 = df['userId'].value_counts().head(3).to_frame(name='count_of_carts').reset_index()
         return top3
 
 if __name__ == '__main__':
     raports = Raports()
-    print('1',raports.raport1())
-    print('2',raports.raport2())
-    print('3',raports.raport3())
-    print('4',raports.raport4())
-    print('5',raports.raport5())
+    # print('1',raports.raport1())
+    # print('2',raports.raport2())
+    # print('3',raports.raport3())
+    # print('4',raports.raport4())
+    # print('5',raports.raport5())
+    print(raports.raport2())

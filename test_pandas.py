@@ -6,7 +6,8 @@ data = [
     {"name": "Mouse", "price": 100},
 ]
 
+data2 = {'imie': ['Anna', 'Jan']}, {'wiek': [24, 25]}
+
 df = pd.DataFrame(data)
 
-for x in df:
-    print(x)
+print(df.describe(include='all'))
