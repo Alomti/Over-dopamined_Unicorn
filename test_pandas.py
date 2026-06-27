@@ -8,6 +8,8 @@ data = [
 
 data2 = {'imie': ['Anna', 'Jan']}, {'wiek': [24, 25]}
 
-df = pd.DataFrame(data)
+data3 = [{'name': 'Angelika'}]
 
-print(df.describe(include='all'))
+df = pd.DataFrame(data3)
+
+print(df)

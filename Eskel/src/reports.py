@@ -58,9 +58,15 @@ class Raports():
         c_df = pd.DataFrame(self.api.getall_carts()).explode('products')
         products_from_carts = pd.json_normalize(c_df['products']).groupby('productId')['quantity'].sum().reset_index().sort_values('quantity', ascending=False)
         p_df = pd.DataFrame(self.api.getall_products())
-        categoty = p_df[['id','category']]
-        result = pd.merge(products_from_carts, categoty, how='left', left_on='productId', right_on='id').drop(columns=['productId', 'id']).groupby('category')['quantity'].sum().reset_index().sort_values('quantity', ascending=False)
+        product_categories = p_df[['id','category']]
+        result = pd.merge(products_from_carts, product_categories, how='left', left_on='productId', right_on='id').drop(columns=['productId', 'id']).groupby('category')['quantity'].sum().reset_index().sort_values('quantity', ascending=False)
         return result
+    
+    def raport7(self):
+        c_df = pd.DataFrame(self.api.getall_carts()).explode('products')
+        products = pd.json_normalize(c_df['products'])
+        quantity_of_products = pd.DataFrame([{'Quantity of products in all carts': products['quantity'].sum()}])
+        return quantity_of_products
 
 if __name__ == '__main__':
     raports = Raports()
@@ -71,7 +77,7 @@ if __name__ == '__main__':
     # print('5',raports.raport5())
     # print('6',raports.raport6())
     # print('7',raports.raport7())
-    print(raports.raport6())
+    print(raports.raport7())
     report = Path(__file__).parent.parent / 'data' / 'current_report.csv'
     report.parent.mkdir(parents=True, exist_ok=True)
-    raports.raport6().to_csv(report, index=False, encoding='utf-8')
+    raports.raport7().to_csv(report, index=False, encoding='utf-8')

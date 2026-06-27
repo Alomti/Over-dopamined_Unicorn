@@ -43,4 +43,7 @@ def saveCSV():
     report6.parent.mkdir(parents=True, exist_ok=True)
     reports.raport6().to_csv(report6, index=False, encoding='utf-8')
 
+    report7 = Path(__file__).parent.parent / 'data' / 'report7.csv'
+    report7.parent.mkdir(parents=True, exist_ok=True)
+    reports.raport7().to_csv(report7, index=False, encoding='utf-8')
 saveCSV()
