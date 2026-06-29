@@ -78,6 +78,6 @@ if __name__ == '__main__':
     # print('6',raports.raport6())
     # print('7',raports.raport7())
     print(raports.raport7())
-    report = Path(__file__).parent.parent / 'data' / 'current_report.csv'
+    report = Path(__file__).parent.parent / 'data' / 'current_report.xlsx'
     report.parent.mkdir(parents=True, exist_ok=True)
-    raports.raport7().to_csv(report, index=False, encoding='utf-8')
+    raports.raport7().to_excel(report)

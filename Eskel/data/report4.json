@@ -1,5 +1,5 @@
-[
-    {
-        "Avg cart value:": 221.89
+{
+    "Avg cart value:":{
+        "0":221.89
     }
-]
+}

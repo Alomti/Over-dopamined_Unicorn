@@ -29,3 +29,7 @@ class Apiget():
     def get_cart(self, id):
         cart = requests.get(f'{self.base_url}/carts/{id}')
         return cart.json()
+    
+if __name__ == '__main__':
+    api = Apiget()
+    print(api.getall_users())
