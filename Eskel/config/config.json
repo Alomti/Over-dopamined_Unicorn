@@ -1,0 +1,5 @@
+{
+    "data_file": "data",
+    "log_level": "INFO",
+    "log_file": "data/app.log"
+}

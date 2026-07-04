@@ -1,4 +1,0 @@
-{
-    "log_level": "INFO",
-    "log_file": "Path(__file__).parent / 'data' / 'app.log'"
-}
