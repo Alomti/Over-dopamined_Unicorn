@@ -3,7 +3,7 @@ import requests
 import logging
 logger = logging.getLogger(__name__)
 try:
-    from AutomationHub.app.config.settings import weather_KEY, timeout
+    from AutomationHub.app.config.load_env import weather_KEY, timeout
 except ValueError as e:
     logger.error(f'Error with geting API keys. {e}')
     raise SystemExit(1)
