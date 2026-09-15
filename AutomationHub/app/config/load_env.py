@@ -1,8 +1,11 @@
+from pathlib import Path
 from dotenv import load_dotenv
 import os
 import logging
 logger = logging.getLogger(__name__)
-load_dotenv()
+
+base_dir = Path(__file__).parents[1].resolve()
+load_dotenv(base_dir/ '.env')
 
 weather_KEY = os.getenv('weather_KEY')
 if not weather_KEY:
