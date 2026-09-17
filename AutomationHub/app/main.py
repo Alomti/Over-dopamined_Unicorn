@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-import requests
+import httpx
 import logging
 logger = logging.getLogger(__name__)
 try:
@@ -15,35 +15,17 @@ app = FastAPI()
 print('Backend starting...')
 
 @app.get('/weather', response_model=WeatherModel)
-def put_out_weather(city: str) -> WeatherModel:
+async def put_out_weather(city: str) -> WeatherModel:
     try:
-        result = get_weather(weather_KEY, city, timeout)
+        result = await get_weather(weather_KEY, city, timeout)
         model = WeatherModel(**result)
-    except requests.exceptions.ConnectionError as e:
-        logger.error(f"Server connection error for weather: {e}")
-        return {'To co jeszcze do ustalenia typ ale you know that i know gdzie to umieścić'}
-    except requests.exceptions.Timeout as e:
-        logger.error(f"Response timeout for weather: {e}")
-    except requests.exceptions.HTTPError as e:
-        logger.error(f"Server returned an HTTP error for weather: {e}")
-    except requests.exceptions.JSONDecodeError as e:
-        logger.error(f"The response from weather is not a valid JSON format: {e}")
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Unexcepted error requests for weather: {e}")
-    return model
-
-@app.post('/weather/test', response_model=TestModel)
-def put_out_weather(data: TestModel) -> TestModel:
-    try:
-        response = data
-        return response
-    except requests.exceptions.Timeout:
+    except httpx.TimeoutException:
         logger.error('Timeout with WeatherApi connection')
         raise HTTPException(
             status_code=504,
             detail='To long waiting time for response from weather API'
         )
-    except requests.exceptions.HTTPError as e:
+    except httpx.HTTPStatusError as e:
         status_code = e.response.status_code
         if status_code == 500:
             logger.error(f'HTTPError code: {status_code}')
@@ -69,24 +51,44 @@ def put_out_weather(data: TestModel) -> TestModel:
                 status_code=404,
                 detail='Not Found That City'
             )
-        elif status_code in (429, 500, 502, 503):
+        elif status_code in (429, 502, 503):
             logger.error(f'HTTPError code: {status_code}')
             raise HTTPException(
                 status_code=503,
                 detail='Service Unavailable'
             )
-    except requests.exceptions.ConnectionError as e:
+        else:
+            logger.error(f'Unexcepted error {e}')
+            raise HTTPException(
+                status_code=500,
+                detail='Unexcepted requuests error'
+            )
+            
+    except httpx.ConnectError as e:
         logger.error(f'Cnonection Error {e} with Weather API')
         raise HTTPException(
             status_code=503,
             detail='Failed to connect with Weather API'
         )
-    except requests.exceptions.RequestException as e:
+    except httpx.RequestError as e:
         logger.error(f'Unexpected requests error: {e}')
         raise HTTPException(
             status_code=500,
             detail='Unexpected requests error'
         )
+    except Exception as e:
+        logger.error(f'Unexpected error: {e}')
+        raise HTTPException(
+            status_code=500,
+            detail='Unexpected error'
+        )
+    return model
+
+@app.post('/weather/test', response_model=TestModel)
+def put_out_weather(data: TestModel) -> TestModel:
+    try:
+        response = data
+        return response
     except Exception as e:
         logger.error(f'Unexpected error: {e}')
         raise HTTPException(
