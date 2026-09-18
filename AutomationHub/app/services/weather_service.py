@@ -13,3 +13,4 @@ async def get_weather(key, city, timeout):
         'chance_of_rain': raw['current']['will_it_rain']
         }
     return weather
+

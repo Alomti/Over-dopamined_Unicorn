@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException
+from pathlib import Path
 import httpx
+from json import JSONDecodeError
 import logging
 logger = logging.getLogger(__name__)
 try:
@@ -8,17 +10,20 @@ except ValueError as e:
     logger.error(f'Error with geting API keys. {e}')
     raise SystemExit(1)
 from AutomationHub.app.services.weather_service import get_weather
-from AutomationHub.app.models.weather_model import WeatherModel, TestModel
-
+from AutomationHub.app.models.weather_model import WeatherModel, HistoryModel, AddWeather, AddResponse
+from AutomationHub.app.models.save_json_model import read_json, add_to_json
+hand_mades = Path(__file__).parent / 'data' / 'hand_mades.json'
+if not hand_mades.exists:
+    hand_mades.touch()
 app = FastAPI()
 
 print('Backend starting...')
-
 @app.get('/weather', response_model=WeatherModel)
 async def put_out_weather(city: str) -> WeatherModel:
     try:
         result = await get_weather(weather_KEY, city, timeout)
         model = WeatherModel(**result)
+
     except httpx.TimeoutException:
         logger.error('Timeout with WeatherApi connection')
         raise HTTPException(
@@ -84,14 +89,33 @@ async def put_out_weather(city: str) -> WeatherModel:
         )
     return model
 
-@app.post('/weather/test', response_model=TestModel)
-def put_out_weather(data: TestModel) -> TestModel:
+@app.post('/weather/addWeather', response_model=AddResponse, status_code=201)
+async def put_out_weather(data: AddWeather) -> AddResponse:
     try:
-        response = data
-        return response
+        add_to_json(hand_mades, data)
+        message = 'Thanks for updating weather in your location'
     except Exception as e:
         logger.error(f'Unexpected error: {e}')
         raise HTTPException(
             status_code=500,
             detail='Unexpected error'
         )
+    return AddResponse(message)
+
+@app.get('/weather/handMadeHistory', response_model=HistoryModel)
+def get_id() -> HistoryModel:
+    try:
+        history = read_json(hand_mades)
+    except JSONDecodeError as e:
+        logger.error(f'Unexpected error with opening json: {e}')
+        raise HTTPException(
+            status_code=500,
+            detail='Unexpected error'
+        )
+    except Exception as e:
+        logger.error(f'Unexpected error: {e}')
+        raise HTTPException(
+            status_code=500,
+            detail='Unexpected error'
+        )
+    return HistoryModel(history)

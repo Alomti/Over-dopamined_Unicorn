@@ -5,6 +5,13 @@ class WeatherModel(BaseModel):
     wind_Speed: float
     chance_of_rain: int
 
-class TestModel(BaseModel):
+class HistoryModel(BaseModel):
+    history: list
+
+class AddWeather(BaseModel):
     city: str
-    forecast: int
+    temp: float
+    wind_Speed: float
+
+class AddResponse(BaseModel):
+    message: str
